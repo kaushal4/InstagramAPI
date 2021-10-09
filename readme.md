@@ -22,3 +22,7 @@
   ![This is an image](screenshots/apis/getPostOfUser.png)
 - setting a different offset=2
   ![This is an image](<screenshots/apis/getPostOfUser(1).png>)
+
+## Unit testing with overall coverage
+
+![This is an image](screenshots/testing/all_tests.png)
