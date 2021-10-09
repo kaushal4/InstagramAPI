@@ -3,6 +3,7 @@ package utility
 import (
 	"errors"
 	"strconv"
+	"strings"
 )
 
 func GetIDFromString(id string) (int, error) {
@@ -11,4 +12,9 @@ func GetIDFromString(id string) (int, error) {
 	} else {
 		return 0, errors.New("invalid ID")
 	}
+}
+
+func ExtractID(path, base string) (int, error) {
+	id := strings.TrimPrefix(path, base)
+	return GetIDFromString(id)
 }

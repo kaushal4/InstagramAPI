@@ -10,7 +10,6 @@ import (
 	"fmt"
 	"net/http"
 	"reflect"
-	"strconv"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -68,18 +67,8 @@ func GetPostsById(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "GET":
 		{
-			var id string
-			idParam := r.URL.Query()["id"]
-			if len(idParam) == 0 {
-				responses.SetError(w, "no parameters passed")
-				return
-			} else {
-				id = idParam[0]
-			}
-			var idParsed int
-			if i, err := strconv.Atoi(id); err == nil {
-				idParsed = i
-			} else {
+			idParsed, err := utility.ExtractID(r.URL.Path, "/posts/")
+			if err != nil {
 				responses.SetError(w, "Invalid ID")
 				return
 			}
@@ -159,10 +148,10 @@ func GetPostsByUser(w http.ResponseWriter, r *http.Request) {
 	case "GET":
 		{
 			var user struct {
-				USERID int    `json:"userid"`
 				OFFSET string `json:"offset"`
 			}
 			var offset int
+			var id int
 			decoder := json.NewDecoder(r.Body)
 			err := decoder.Decode(&user)
 			if err != nil {
@@ -175,7 +164,11 @@ func GetPostsByUser(w http.ResponseWriter, r *http.Request) {
 				responses.SetError(w, err.Error())
 				return
 			}
-			if posts, err := fetchPostsByUser(user.USERID, offset); err == nil {
+			if id, err = utility.ExtractID(r.URL.Path, "/posts/users/"); err != nil {
+				responses.SetError(w, "Invalid ID")
+				return
+			}
+			if posts, err := fetchPostsByUser(id, offset); err == nil {
 				if len(posts) == 0 {
 					responses.SetError(w, "could not fetch posts :(, The user might not have any posts")
 					return

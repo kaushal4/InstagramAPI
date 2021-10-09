@@ -67,17 +67,9 @@ func GetUsersById(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "GET":
 		{
-			var id string
 			var err error
-			idParam := r.URL.Query()["id"]
-			if len(idParam) == 0 {
-				responses.SetError(w, "no parameter passed")
-				return
-			} else {
-				id = idParam[0]
-			}
 			var idParsed int
-			if idParsed, err = utility.GetIDFromString(id); err != nil {
+			if idParsed, err = utility.ExtractID(r.URL.Path, "/users/"); err != nil {
 				responses.SetError(w, "Invalid ID")
 				return
 			}
