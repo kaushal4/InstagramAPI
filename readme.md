@@ -13,9 +13,9 @@
 
 #### create a user
 
-- Should be a POST request
-- Use JSON request body
-- URL should be '/users'
+- It is a **POST** request
+- JSON request body must be provided
+- URL is '/users'
 
 #### Get a user using id
 
@@ -37,7 +37,7 @@
 
 #### List all posts of a user
 
-- Should be a **GET** request
+- It is a **GET** request
 - Id is a url parameter
 - Pagination Offset must be provided as JSON body
 - URL should be '/posts/users/<Id here>'
