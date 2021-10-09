@@ -83,7 +83,6 @@ func GetUsersById(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 			if result, err := findUser(idParsed); err == nil {
-				//var message string
 				if userJson, err := json.MarshalIndent(result, "", "   "); err == nil {
 					responses.SetResponse(w)
 					w.Write(userJson)
@@ -92,8 +91,6 @@ func GetUsersById(w http.ResponseWriter, r *http.Request) {
 					responses.SetError(w, err.Error())
 				}
 
-				// message := fmt.Sprintf("Name: %s \n Email: %s \n ID: %d", result.NAME, result.EMAIL, result.ID)
-				// fmt.Fprintf(w, message)
 			} else {
 				responses.SetError(w, "Could not fetch user :(, The user might not exist")
 			}
