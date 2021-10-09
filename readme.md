@@ -44,19 +44,19 @@
 
 ## Folder Structure
 
-#### Root folder contains main.go
+- Root folder contains main.go
 
-#### User folder contains the user package with user struct and user based functions
+- User folder contains the user package with user struct and user based functions
 
-#### Post folder contains the post package with post struct and post based functions
+- Post folder contains the post package with post struct and post based functions
 
-#### dataLayer folder contains dataLayer package with contains mongodb client function
+- dataLayer folder contains dataLayer package with contains mongodb client function
 
-#### responses folder contains responses package some standard http responses which are used in serving GET and POST request
+- responses folder contains some standard http responses which are used in serving GET and POST request
 
-#### utility folder contains utility package which has some basic utility functions used in other packages
+- utility folder contains utility package which has some basic utility functions used in other packages
 
-#### CryptoPass folder contains the cryptoPass package which has functions used to encrypt,decrypt and compare passwords
+- CryptoPass folder contains the functions used to encrypt,decrypt and compare passwords
 
 ## API endpoints and screenshots
 
