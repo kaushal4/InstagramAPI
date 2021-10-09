@@ -8,6 +8,7 @@ import (
 	"encoding/hex"
 	"io"
 	"os"
+	"strings"
 )
 
 func SetSecret() {
@@ -59,7 +60,7 @@ func CompareHashandPassword(pass string, data []byte) bool {
 	key := os.Getenv("HASH_KEY")
 	plaintext := decrypt(data, key)
 	plaintextString := string(plaintext)
-	if plaintextString == pass {
+	if strings.Compare(plaintextString, pass) == 0 {
 		return true
 	} else {
 		return false
