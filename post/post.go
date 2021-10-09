@@ -3,6 +3,7 @@ package post
 import (
 	"appointy/InstagramAPI/dataLayer"
 	"appointy/InstagramAPI/responses"
+	"appointy/InstagramAPI/utility"
 	"context"
 	"encoding/json"
 	"errors"
@@ -13,6 +14,7 @@ import (
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type Post struct {
@@ -125,14 +127,19 @@ func GetPostsById(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func fetchPostsByUser(id int) ([]Post, error) {
+func fetchPostsByUser(id int, offset int) ([]Post, error) {
 	client := dataLayer.InitDataLayer()
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	defer client.Disconnect(ctx)
 	postsCollection := client.Database("appointy").Collection("posts")
 	var posts []Post
-	cur, err := postsCollection.Find(ctx, bson.M{"userid": id})
+
+	opts := options.Find()
+	opts.SetSort(bson.D{{"id", 1}})
+	opts.SetSkip(int64(offset))
+	opts.SetLimit(2)
+	cur, err := postsCollection.Find(ctx, bson.M{"userid": id}, opts)
 	if err != nil {
 		return make([]Post, 0), errors.New("error fetching posts")
 	}
@@ -152,15 +159,23 @@ func GetPostsByUser(w http.ResponseWriter, r *http.Request) {
 	case "GET":
 		{
 			var user struct {
-				USERID int `json:"userid"`
+				USERID int    `json:"userid"`
+				OFFSET string `json:"offset"`
 			}
+			var offset int
 			decoder := json.NewDecoder(r.Body)
 			err := decoder.Decode(&user)
 			if err != nil {
-				fmt.Println(err.Error())
-				panic(err)
+				responses.SetError(w, err.Error())
+				return
 			}
-			if posts, err := fetchPostsByUser(user.USERID); err == nil {
+			if user.OFFSET == "" {
+				offset = 0
+			} else if offset, err = utility.GetIDFromString(user.OFFSET); err != nil {
+				responses.SetError(w, err.Error())
+				return
+			}
+			if posts, err := fetchPostsByUser(user.USERID, offset); err == nil {
 				if len(posts) == 0 {
 					responses.SetError(w, "could not fetch posts :(, The user might not have any posts")
 					return
