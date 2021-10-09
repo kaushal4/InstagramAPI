@@ -18,8 +18,15 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
+/* Mutex locks are applied to post requests so that we can aviod threads
+reading outdated data or multiple threads trying to add the same data */
 var lock sync.Mutex
 
+/*
+the User struct defines the structure of user
+This will be used to send data to the database and read from it
+password -> string contains the hash of the password sent by the user
+*/
 type User struct {
 	ID       int    `json:"id" bson:"id"`
 	NAME     string `json:"name" bson:"name"`
@@ -27,6 +34,10 @@ type User struct {
 	PASSWORD string `json:"password" bson:"password"`
 }
 
+/*
+The below function is used to make sure that the post request contains the adequte fields
+before quering it to database
+*/
 func checkUserFields(user User) bool {
 	v := reflect.ValueOf(user)
 	for i := 0; i < v.NumField(); i++ {
@@ -38,6 +49,9 @@ func checkUserFields(user User) bool {
 	return true
 }
 
+/*
+The below function is used to find the user from the database using the user id
+*/
 func findUser(id int) (User, error) {
 	client := dataLayer.InitDataLayer()
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
@@ -51,6 +65,11 @@ func findUser(id int) (User, error) {
 		return User{}, errors.New("failed to find user with provided ID")
 	}
 }
+
+/*
+The below function is used to create a user in the database
+The object recieved from the post request is checked and then added to the database
+*/
 
 func createUser(user User) (string, error) {
 	lock.Lock()
@@ -68,6 +87,12 @@ func createUser(user User) (string, error) {
 	}
 }
 
+/*
+The below function is the primary function used to serve requests
+It checks if the method is post or get
+for get requests it extracts the user id from the url and calls the findUser() function
+for post requests it extracts post data from the request body and calls the createUser() function
+*/
 func GetUsersById(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "GET":

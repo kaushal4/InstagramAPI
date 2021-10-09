@@ -17,6 +17,10 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
+/*
+The below struct is used to encode the post request json and also to push document to mongodb collection
+timestamp is calulated using time.Now() which corresponds with the time the request was fullfilled
+*/
 type Post struct {
 	ID       int    `json:"id"`
 	IMGURL   string `json:"imgurl"`
@@ -25,8 +29,14 @@ type Post struct {
 	USERID   int    `json:"userid"`
 }
 
+/* Mutex locks are applied to post requests so that we can aviod threads
+reading outdated data or multiple threads trying to add the same data */
 var lock sync.Mutex
 
+/*
+The below function is used to make sure that the post request contains the adequte fields
+before quering it to database
+*/
 func checkPostFields(post Post) bool {
 	v := reflect.ValueOf(post)
 	for i := 0; i < v.NumField(); i++ {
@@ -38,6 +48,9 @@ func checkPostFields(post Post) bool {
 	return true
 }
 
+/*
+The below fuction is used to add post document to the database
+*/
 func createPost(post Post) (string, error) {
 	lock.Lock()
 	defer lock.Unlock()
@@ -54,6 +67,9 @@ func createPost(post Post) (string, error) {
 	}
 }
 
+/*
+The below function will find a post corresponding to a particular post id
+*/
 func findPost(id int) (Post, error) {
 	client := dataLayer.InitDataLayer()
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
@@ -68,6 +84,12 @@ func findPost(id int) (Post, error) {
 	}
 }
 
+/*
+The below function is the primary function used to serve requests
+It checks if the method is post or get
+for get requests it extracts the user id from the url and calls the findPost() function
+for post requests it extracts post data from the request body and calls the createPost() function
+*/
 func GetPostsById(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "GET":
@@ -78,7 +100,6 @@ func GetPostsById(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 			if result, err := findPost(idParsed); err == nil {
-				//var message string
 				if postJson, err := json.MarshalIndent(result, "", "   "); err == nil {
 					w.Header().Set("Content-Type", "application/json")
 					w.WriteHeader(http.StatusOK)
@@ -121,6 +142,9 @@ func GetPostsById(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+/*
+The below function is used to fetch posts using user id
+*/
 func fetchPostsByUser(id int, offset int) ([]Post, error) {
 	client := dataLayer.InitDataLayer()
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
@@ -147,6 +171,12 @@ func fetchPostsByUser(id int, offset int) ([]Post, error) {
 	}
 	return posts, nil
 }
+
+/*
+The below function handles get request made to /posts/users/<userid>
+This checks for offset value in request body and the user id value in the url
+It then calls the fetchPostByUser function
+*/
 
 func GetPostsByUser(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
