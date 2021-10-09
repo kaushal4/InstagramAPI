@@ -1,12 +1,46 @@
 # Instagram API
 
-## how to run
+## How to run
 
-- install go in your device
-- install mongodb and start mongod
-- clone the repository
-- execute `go run tidy` in root folder
-- execute `go run` in root folder
+- Install go in your device
+- Install mongodb and start mongod
+- Clone the repository
+- Execute `go run tidy` in root folder
+- Execute `go run` in root folder
+- Execute `go test ./... -cover` to run unit tests with coverage
+
+## API documentation
+
+#### create a user
+
+- Should be a POST request
+- Use JSON request body
+- URL should be '/users'
+
+#### Get a user using id
+
+- This is a **GET** request
+- Id is a url parameter
+- URL is '/users/<id here>'
+
+#### Create a Post
+
+- This is a **POST** request
+- JSON request body must be provided
+- URL is '/posts'
+
+#### Get a post using id
+
+- It is a **GET** request
+- Id is a url parameter
+- URL is '/posts/<id here>'
+
+#### List all posts of a user
+
+- Should be a **GET** request
+- Id is a url parameter
+- Pagination Offset must be provided as JSON body
+- URL should be '/posts/users/<Id here>'
 
 ## API endpoints and screenshots
 
@@ -22,6 +56,10 @@
   ![This is an image](screenshots/apis/getPostOfUser.png)
 - setting a different offset=2
   ![This is an image](<screenshots/apis/getPostOfUser(1).png>)
+
+## Password Encryption
+
+![This is an image](screenshots/testing/passwordEncryption.png)
 
 ## Unit testing with overall coverage
 
