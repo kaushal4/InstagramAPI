@@ -11,9 +11,9 @@
 ## API endpoints and screenshots
 
 - Create a User
-  ![This is an image](screenshots/apis/postUser.png | width=250)
+  ![This is an image](screenshots/apis/postUser.png){:height="50%" width="50%"}
 - Get a user using id
-  ![This is an image](screenshots/apis/postUserProof.png | width=250)
+  ![This is an image](screenshots/apis/postUserProof.png)
 - Create a Post
   ![This is an image](screenshots/apis/postPost.png | width=250)
 - Get post using ID
