@@ -12,10 +12,13 @@ import (
 	"net/http"
 	"os"
 	"reflect"
+	"sync"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
 )
+
+var lock sync.Mutex
 
 type User struct {
 	ID       int    `json:"id" bson:"id"`
@@ -50,6 +53,8 @@ func findUser(id int) (User, error) {
 }
 
 func createUser(user User) (string, error) {
+	lock.Lock()
+	defer lock.Unlock()
 	client := dataLayer.InitDataLayer()
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()

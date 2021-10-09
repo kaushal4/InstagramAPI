@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"net/http"
 	"reflect"
+	"sync"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -24,6 +25,8 @@ type Post struct {
 	USERID   int    `json:"userid"`
 }
 
+var lock sync.Mutex
+
 func checkPostFields(post Post) bool {
 	v := reflect.ValueOf(post)
 	for i := 0; i < v.NumField(); i++ {
@@ -36,6 +39,8 @@ func checkPostFields(post Post) bool {
 }
 
 func createPost(post Post) (string, error) {
+	lock.Lock()
+	defer lock.Unlock()
 	client := dataLayer.InitDataLayer()
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
