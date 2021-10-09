@@ -11,7 +11,7 @@
 
 ## API documentation
 
-#### create a user
+#### Create a user
 
 - It is a **POST** request
 - JSON request body must be provided
@@ -44,18 +44,29 @@
 
 ## API endpoints and screenshots
 
-- Create a User
-  ![This is an image](screenshots/apis/postUser.png)
-- Get a user using id
-  ![This is an image](screenshots/apis/postUserProof.png)
-- Create a Post
-  ![This is an image](screenshots/apis/postPost.png)
-- Get post using ID
-  ![This is an image](screenshots/apis/postProof.png)
-- Get post using ID (pagination is implemented using offset=1)
-  ![This is an image](screenshots/apis/getPostOfUser.png)
-- setting a different offset=2
-  ![This is an image](<screenshots/apis/getPostOfUser(1).png>)
+### Create a User
+
+![This is an image](screenshots/apis/postUser.png)
+
+### Get a user using id
+
+![This is an image](screenshots/apis/postUserProof.png)
+
+### Create a Post
+
+![This is an image](screenshots/apis/postPost.png)
+
+### Get post using ID
+
+![This is an image](screenshots/apis/postProof.png)
+
+### Get post using ID (pagination is implemented using offset=1)
+
+![This is an image](screenshots/apis/getPostOfUser.png)
+
+### setting a different offset=2
+
+![This is an image](<screenshots/apis/getPostOfUser(1).png>)
 
 ## Password Encryption
 
