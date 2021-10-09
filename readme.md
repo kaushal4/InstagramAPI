@@ -10,5 +10,15 @@
 
 ## API endpoints and screenshots
 
-- Create an User
-  ![This is an image](screenshots/apis/postUser.png)
+- Create a User
+  ![This is an image](screenshots/apis/postUser.png | width=250)
+- Get a user using id
+  ![This is an image](screenshots/apis/postUserProof.png | width=250)
+- Create a Post
+  ![This is an image](screenshots/apis/postPost.png | width=250)
+- Get post using ID
+  ![This is an image](screenshots/apis/postProof.png | width=250)
+- Get post using ID (pagination is implemented using offset=1)
+  ![This is an image](screenshots/apis/getPostOfUser.png | width=250)
+- setting a different offset=2
+  ![This is an image](screenshots/apis/getPostOfUser(1).png | width=250)
