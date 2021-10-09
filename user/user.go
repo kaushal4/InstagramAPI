@@ -4,6 +4,7 @@ import (
 	"appointy/InstagramAPI/cryptoPass"
 	"appointy/InstagramAPI/dataLayer"
 	"appointy/InstagramAPI/responses"
+	"appointy/InstagramAPI/utility"
 	"context"
 	"encoding/json"
 	"errors"
@@ -11,7 +12,6 @@ import (
 	"net/http"
 	"os"
 	"reflect"
-	"strconv"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -68,6 +68,7 @@ func GetUsersById(w http.ResponseWriter, r *http.Request) {
 	case "GET":
 		{
 			var id string
+			var err error
 			idParam := r.URL.Query()["id"]
 			if len(idParam) == 0 {
 				responses.SetError(w, "no parameter passed")
@@ -76,9 +77,7 @@ func GetUsersById(w http.ResponseWriter, r *http.Request) {
 				id = idParam[0]
 			}
 			var idParsed int
-			if i, err := strconv.Atoi(id); err == nil {
-				idParsed = i
-			} else {
+			if idParsed, err = utility.GetIDFromString(id); err != nil {
 				responses.SetError(w, "Invalid ID")
 				return
 			}
