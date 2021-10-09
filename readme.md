@@ -11,4 +11,4 @@
 ## API endpoints and screenshots
 
 - Create an User
-  ![This is an image](https://github.com/kaushal4/InstagramAPI/screenshots/apis/postUser.png)
+  ![This is an image](https://github.com/kaushal4/InstagramAPI/tree/master/screenshots/apis/postUser.png)
